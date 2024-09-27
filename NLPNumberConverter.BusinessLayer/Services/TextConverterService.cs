@@ -17,7 +17,7 @@ namespace NLPNumberConverter.BusinessLayer.Services
                 return new ConvertedText { OutputText = "Geçerli bir metin giriniz." };
             }
 
-            // Metni küçük harfe çevirme ve işlem yapma
+            // Metni küçük harfe çevirme ve işlem yapma metotlarım
             string inputText = userText.InputText.ToLower();
             string outputText = ConvertWordsToNumbers(inputText);
 
@@ -27,7 +27,7 @@ namespace NLPNumberConverter.BusinessLayer.Services
 
         private string ConvertWordsToNumbers(string text)
         {
-            // Sayı kelimeleri ile eşleşen sayısal değerler
+            // Sayı kelimeleri ile eşleşen sayısal değerleri tanımladım burada
             Dictionary<string, int> numberWords = new Dictionary<string, int>
     {
         { "sıfır", 0 }, { "bir", 1 }, { "iki", 2 }, { "üç", 3 }, { "dört", 4 },
@@ -37,63 +37,63 @@ namespace NLPNumberConverter.BusinessLayer.Services
         { "doksan", 90 }, { "yüz", 100 }, { "bin", 1000 }, { "milyon", 1000000 }
     };
 
-            // Birleşik kelimeleri ayıralım
+            //SeparateCompoundNumbers metodu ile birleşik kelimeleri ayırdım 
             text = SeparateCompoundNumbers(text, numberWords.Keys.ToList());
 
-            int total = 0;  // Toplam sayıyı tutacak
-            int currentNumber = 0;  // O anki sayıyı biriktirmek için
-            int multiplier = 1;  // Bin veya milyon gibi çarpanları takip edecek
-            bool foundNumber = false;  // Sayı kelimesi bulunduğunda takip etmek için
+            int total = 0;  // Toplam sayıyı tutacak burası
+            int currentNumber = 0;  // o anki sayıyı biriktirmek için burası
+            int multiplier = 1;  // Bin veya milyon gibi çarpanları takip etmesi için tanımladım
+            bool foundNumber = false;  // Sayı kelimesi bulunduğunda takip etmek içindir
             string processedText = "";
 
-            // Cümleyi kelimelerine ayır
+            // Cümleyi kelimelerine ayırıyor
             var words = text.Split(new[] { ' ', ',', '.' }, StringSplitOptions.RemoveEmptyEntries);
 
             foreach (var word in words)
             {
-                string cleanWord = word.ToLower();  // Küçük harfe çeviriyoruz
+                string cleanWord = word.ToLower();  // Küçük harfe çeviriyorum (büyük küçük harf duyarı için)
 
                 if (numberWords.ContainsKey(cleanWord))
                 {
                     int numberValue = numberWords[cleanWord];
 
-                    // "yüz", "bin", "milyon" gibi çarpan kelimeler için işlem yapıyoruz
+                    // "yüz", "bin", "milyon" gibi çarpan kelimeler için işlem yapıyorum
                     if (cleanWord == "yüz")
                     {
-                        if (currentNumber == 0) currentNumber = 1;  // "yüz" kelimesi tek başına ise 100 olarak kabul ediliyor
-                        currentNumber *= numberValue;  // Çarpıyoruz
+                        if (currentNumber == 0) currentNumber = 1;  // "yüz" kelimesi tek başına ise 100 olarak kabul edilmesi için bu koşulu yazdım
+                        currentNumber *= numberValue;  // Çarpıyorum
                     }
                     else if (cleanWord == "bin" || cleanWord == "milyon")
                     {
-                        if (currentNumber == 0) currentNumber = 1;  // Öncesinde bir sayı yoksa 1 olarak kabul ediyoruz
-                        total += currentNumber * numberValue;  // Çarpan eklenir
-                        currentNumber = 0;  // Sayıyı sıfırla
+                        if (currentNumber == 0) currentNumber = 1;  // Öncesinde bir sayı yoksa 1 olarak kabul ediyorum
+                        total += currentNumber * numberValue;  // Çarpan ekleniyor
+                        currentNumber = 0;  // Sayıyı sıfırladı
                     }
                     else
                     {
-                        currentNumber += numberValue;  // Diğer durumlarda sayıyı topluyoruz
+                        currentNumber += numberValue;  // Diğer durumlarda sayıyı topluyor
                     }
 
                     foundNumber = true;  // Sayı bulundu
                 }
                 else
                 {
-                    // Eğer sayı kelimesi değilse, birikmiş sayıyı ekliyoruz
+                    // Eğer sayı kelimesi değilse, birikmiş sayıyı ekliyorum
                     if (foundNumber)
                     {
                         total += currentNumber;
-                        processedText += total + " ";  // Biriken sayıyı ekle
-                        total = 0;  // Biriken sayıyı sıfırla
+                        processedText += total + " ";  // Biriken sayıyı ekliyor
+                        total = 0;  // Biriken sayıyı sıfırlıyor
                         currentNumber = 0;
                         foundNumber = false;
                     }
 
-                    // Sayı olmayan kelimeyi olduğu gibi ekle
+                    // Sayı olmayan kelimeyi olduğu gibi ekliyor
                     processedText += word + " ";
                 }
             }
 
-            // Eğer döngü sonunda birikmiş sayılar varsa onları da ekle
+            // Eğer döngü sonunda birikmiş sayılar varsa onlarıda ekliyor
             if (foundNumber)
             {
                 total += currentNumber;
@@ -105,12 +105,12 @@ namespace NLPNumberConverter.BusinessLayer.Services
 
 
 
-        // Birleşik sayı kelimelerini ayıran metot
+        // Birleşik sayı kelimelerini ayıran metot burası yukarıda da belirttiğim gibi
         private string SeparateCompoundNumbers(string text, List<string> numberWords)
         {
-            foreach (var numberWord in numberWords.OrderByDescending(nw => nw.Length)) // Uzun kelimeler önce kontrol edilsin
+            foreach (var numberWord in numberWords.OrderByDescending(nw => nw.Length)) // Uzun kelimeler önce kontrol ediliyor
             {
-                // Eğer metinde birleşik sayı kelimesi varsa, onu ayır
+                // Eğer metinde birleşik sayı kelimesi varsa, onu ayırıyor
                 text = text.Replace(numberWord, " " + numberWord + " ");
             }
             return text;
