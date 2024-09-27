@@ -1,0 +1,23 @@
+﻿
+@{
+    ViewData["Title"] = "Metin Dönüştürme";
+}
+
+<h1>Metin Dönüştürme</h1>
+
+<form asp-action="Convert" method="post">
+    <div class="form-group">
+        <label for="InputText">Metin Girin:</label>
+        <textarea id="InputText" name="InputText" class="form-control" rows="5"></textarea>
+    </div>
+    <br />
+    <button type="submit" class="btn btn-primary">Dönüştür</button>
+</form>
+<br />
+
+@if (ViewBag.ConvertedText != null)
+{
+    <h2>Dönüştürülmüş Metin:</h2>
+    <br />
+    <h4>@ViewBag.ConvertedText</h4>
+}
